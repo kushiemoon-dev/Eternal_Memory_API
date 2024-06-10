@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CardController extends AbstractController
 {
     #[Route('api/cards', name: 'api_Card', methods: ['GET'])]
-    public function getCardList(CardRepository $cardRepository, SerializerInterface $serializer): JsonResponse
+    public function getAllCard(CardRepository $cardRepository, SerializerInterface $serializer): JsonResponse
     {
         $cardList = $cardRepository->findAll();
 
@@ -22,7 +22,7 @@ class CardController extends AbstractController
     }
 
     #[Route('api/cards/{id}', name: 'api_DetailCard', methods: ['GET'])]
-    public function getDetailBook(SerializerInterface $serializer, Card $card): JsonResponse
+    public function getDetailCard(SerializerInterface $serializer, Card $card): JsonResponse
     {
         $jsonCard = $serializer->serialize($card, 'json', ['groups' => 'getCards']);
         return new JsonResponse($jsonCard, Response::HTTP_OK, [], true);

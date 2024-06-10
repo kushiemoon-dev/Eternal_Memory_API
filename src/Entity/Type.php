@@ -14,21 +14,22 @@ class Type
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getCards"])]
+    #[Groups(["getCards"],["getTypes"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getCards"])]
+    #[Groups(["getCards"],["getTypes"])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(["getCards"])]
+    #[Groups(["getCards"],["getTypes"])]
     private ?string $lastName = null;
 
     /**
      * @var Collection<int, Card>
      */
     #[ORM\OneToMany(targetEntity: Card::class, mappedBy: 'type')]
+    #[Groups(["getTypes"])]
     private Collection $Cards;
 
     public function __construct()

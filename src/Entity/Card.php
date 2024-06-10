@@ -13,12 +13,15 @@ class Card
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["getCards"],["getTypes"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getCards"],["getTypes"])]
     private ?string $tittle = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getCards"],["getTypes"])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'Cards')]
