@@ -16,14 +16,15 @@ class CardController extends AbstractController
     public function getCardList(CardRepository $cardRepository, SerializerInterface $serializer): JsonResponse
     {
         $cardList = $cardRepository->findAll();
-        $jsonCardList = $serializer->serialize($cardList, 'json');
+
+        $jsonCardList = $serializer->serialize($cardList, 'json', ['groups' => 'getCards']);
         return new JsonResponse($jsonCardList, Response::HTTP_OK, [], true);
     }
 
     #[Route('api/cards/{id}', name: 'api_DetailCard', methods: ['GET'])]
     public function getDetailBook(SerializerInterface $serializer, Card $card): JsonResponse
     {
-        $jsonCard = $serializer->serialize($card, 'json');
+        $jsonCard = $serializer->serialize($card, 'json', ['groups' => 'getCards']);
         return new JsonResponse($jsonCard, Response::HTTP_OK, [], true);
     }
 }

@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\CardRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CardRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CardRepository::class)]
 class Card
@@ -19,6 +20,10 @@ class Card
 
     #[ORM\Column(length: 255)]
     private ?string $description = null;
+
+    #[ORM\ManyToOne(inversedBy: 'Cards')]
+    #[Groups(["getCards"])]
+    private ?Type $type = null;
 
     public function getId(): ?int
     {
@@ -45,6 +50,18 @@ class Card
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getType(): ?Type
+    {
+        return $this->type;
+    }
+
+    public function setType(?Type $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }

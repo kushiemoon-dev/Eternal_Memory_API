@@ -4,11 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-    "content-hash": "bbe07c40b5f738fc6bfddc7b95226a71",
-=======
     "content-hash": "79dc5c537cb60c9271f88edba50c83ef",
->>>>>>> first_function_and_data
     "packages": [
         {
             "name": "composer/semver",
@@ -7819,8 +7815,6 @@
             "time": "2024-05-07T07:16:35+00:00"
         },
         {
-<<<<<<< HEAD
-=======
             "name": "fakerphp/faker",
             "version": "v1.23.1",
             "source": {
@@ -7884,7 +7878,6 @@
             "time": "2024-01-02T13:46:09+00:00"
         },
         {
->>>>>>> first_function_and_data
             "name": "masterminds/html5",
             "version": "2.9.0",
             "source": {
