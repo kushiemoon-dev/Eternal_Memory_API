@@ -14,15 +14,15 @@ class Type
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getCards"],["getTypes"])]
+    #[Groups(["getCards","getTypes"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getCards"],["getTypes"])]
+    #[Groups(["getCards","getTypes"])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(["getCards"],["getTypes"])]
+    #[Groups(["getCards","getTypes"])]
     private ?string $lastName = null;
 
     /**

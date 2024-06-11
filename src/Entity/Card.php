@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
-use Doctrine\DBAL\Types\Types;
+
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CardRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
+
+
 
 #[ORM\Entity(repositoryClass: CardRepository::class)]
 class Card
@@ -13,18 +15,19 @@ class Card
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getCards"],["getTypes"])]
+    #[Groups(["getCards","getTypes"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getCards"],["getTypes"])]
+    #[Groups(["getCards","getTypes"])]
     private ?string $tittle = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getCards"],["getTypes"])]
+    #[Groups(["getCards","getTypes"])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'Cards')]
+    #[ORM\JoinColumn(onDelete:"CASCADE")]
     #[Groups(["getCards"])]
     private ?Type $type = null;
 
