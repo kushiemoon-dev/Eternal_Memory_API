@@ -30,10 +30,12 @@ class CardController extends AbstractController
  * @Route("/api/cards", name="cards", methods={"GET"})
  */
 #[Route('/api/cards', name: 'cards', methods: ['GET'])]
-public function getAllCards(CardRepository $cardRepository, SerializerInterface $serializer): JsonResponse
+public function getAllCards(CardRepository $cardRepository, SerializerInterface $serializer, Request $request): JsonResponse
 {
+    $page = $request->query->get('page', 1);
+    $limit = $request->query->get('limit', 10);
     // Fetch all cards from the database
-    $cardList = $cardRepository->findAll();
+    $cardList = $cardRepository->findAllWithPagination($page, $limit);
     
     // Serialize the card list to JSON using the 'getCards' group
     $jsonCardList = $serializer->serialize($cardList, 'json', ['groups' => 'getCards']);
