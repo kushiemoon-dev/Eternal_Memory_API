@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class TypeController extends AbstractController
 
@@ -99,16 +100,24 @@ public function deleteType(Type $type, EntityManagerInterface $em): JsonResponse
  * @param SerializerInterface $serializer The serializer to convert the request data to a Type entity and vice versa.
  * @param EntityManagerInterface $em The EntityManager to handle database operations.
  * @param UrlGeneratorInterface $urlGenerator The URL generator to create a URL for the newly created Type entity.
+ * @param ValidatorInterface $validator The Validator to validate the new Type entity.
  *
  * @return JsonResponse A JSON response with HTTP status 201 (Created) and the details of the newly created Type entity.
  * The Location header contains the URL of the newly created Type entity.
  */
 #[Route('/api/types', name: 'createType', methods: ['POST'])]
 public function createType(Request $request, SerializerInterface $serializer,
-    EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator): JsonResponse {
+    EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, ValidatorInterface $validator): JsonResponse {
     // Deserialize the request content to a Type entity
     $type = $serializer->deserialize($request->getContent(), Type::class, 'json');
     
+    // Validate the new Type entity
+    $errors = $validator->validate($type);
+    if ($errors->count() > 0) {
+        // Return a JSON response with HTTP status 400 (Bad Request) if the validation fails
+        return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+    }
+
     // Persist the new Type entity in the EntityManager
     $em->persist($type);
     
@@ -135,6 +144,7 @@ public function createType(Request $request, SerializerInterface $serializer,
  * @param SerializerInterface $serializer The serializer to convert the request data to a Type entity and vice versa.
  * @param Type $currentType The Type entity to update. This is automatically injected by Symfony's routing system.
  * @param EntityManagerInterface $em The EntityManager to handle database operations.
+ * @param ValidatorInterface $validator The Validator to validate the updated Type entity.
  *
  * @return JsonResponse A JSON response with HTTP status 204 (No Content) if the update is successful.
  *
@@ -142,18 +152,25 @@ public function createType(Request $request, SerializerInterface $serializer,
  */
 #[Route('/api/types/{id}', name: 'updateType', methods: ['PUT'])]
 public function updateType(Request $request, SerializerInterface $serializer,
-    Type $currentType, EntityManagerInterface $em): JsonResponse {
+    Type $currentType, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse {
 
-    // Deserialize the request content to a Type entity, populating the existing entity with the new data
+    // Deserialize the request content to an updated Type entity, populating the existing entity
     $updatedType = $serializer->deserialize($request->getContent(), Type::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $currentType]);
     
+    // Validate the updated Type entity
+    $errors = $validator->validate($currentType);
+    if ($errors->count() > 0) {
+        // Return a JSON response with HTTP status 400 (Bad Request) if the validation fails
+        return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+    }
+
     // Persist the updated Type entity in the EntityManager
     $em->persist($updatedType);
     
     // Flush the changes to the database
     $em->flush();
 
-    // Return a JSON response with HTTP status 204 (No Content)
+    // Return a JSON response with HTTP status 204 (No Content) if the update is successful
     return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
 }
 }
