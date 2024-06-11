@@ -16,6 +16,18 @@ class TypeRepository extends ServiceEntityRepository
         parent::__construct($registry, Type::class);
     }
 
+
+    public function findAllWithPagination($page, $limit) {
+        $qb = $this->createQueryBuilder('b')
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
+        return $qb->getQuery()->getResult();
+
+        $query = $qb->getQuery();
+        $query->setFetchMode(Type::class, "type", \Doctrine\ORM\Mapping\ClassMetadata::FETCH_EAGER);
+        return $query->getResult();
+   }
+
     //    /**
     //     * @return Type[] Returns an array of Type objects
     //     */

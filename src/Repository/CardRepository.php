@@ -21,7 +21,11 @@ class CardRepository extends ServiceEntityRepository
             ->setFirstResult(($page - 1) * $limit)
             ->setMaxResults($limit);
         return $qb->getQuery()->getResult();
-    }
+
+        $query = $qb->getQuery();
+        $query->setFetchMode(Card::class, "type", \Doctrine\ORM\Mapping\ClassMetadata::FETCH_EAGER);
+        return $query->getResult();
+   }
 
     //    /**
     //     * @return Card[] Returns an array of Card objects
