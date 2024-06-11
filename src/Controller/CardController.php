@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class CardController extends AbstractController
 {
@@ -29,7 +30,7 @@ class CardController extends AbstractController
  * @Route("/api/cards", name="cards", methods={"GET"})
  */
 #[Route('/api/cards', name: 'cards', methods: ['GET'])]
-public function getAllBooks(CardRepository $cardRepository, SerializerInterface $serializer): JsonResponse
+public function getAllCards(CardRepository $cardRepository, SerializerInterface $serializer): JsonResponse
 {
     // Fetch all cards from the database
     $cardList = $cardRepository->findAll();
@@ -52,7 +53,7 @@ public function getAllBooks(CardRepository $cardRepository, SerializerInterface 
  * @Route("/api/cards/{id}", name="detailCard", methods={"GET"})
  */
 #[Route('/api/cards/{id}', name: 'detailCard', methods: ['GET'])]
-public function getDetailBook(Card $card, SerializerInterface $serializer): JsonResponse {
+public function getDetailCards(Card $card, SerializerInterface $serializer): JsonResponse {
     // Serialize the card object to JSON using the 'getCards' group
     $jsonCard = $serializer->serialize($card, 'json', ['groups' => 'getCards']);
     
@@ -70,8 +71,10 @@ public function getDetailBook(Card $card, SerializerInterface $serializer): Json
  * @return JsonResponse A JSON response with HTTP status 204 (No Content) if the deletion is successful.
  *
  * @Route("/api/cards/{id}", name="deleteCard", methods={"DELETE"})
+ * 
  */
 #[Route('/api/cards/{id}', name: 'deleteCard', methods: ['DELETE'])]
+#[IsGranted("ROLE_ADMIN", message: "Only an admin can delete a card.")]
 public function deleteCard(Card $card, EntityManagerInterface $em): JsonResponse {
     // Remove the card from the entity manager
     $em->remove($card);
@@ -99,8 +102,10 @@ public function deleteCard(Card $card, EntityManagerInterface $em): JsonResponse
  * @throws Exception If the request content cannot be deserialized to a Card object.
  *
  * @Route("/api/cards", name="createCard", methods={"POST"})
+ * #[IsGranted("ROLE_ADMIN", message: "Only an admin can create a card.")]
  */
 #[Route('/api/cards', name: 'createCard', methods: ['POST'])]
+#[IsGranted("ROLE_ADMIN", message: "Only an admin can delete a card.")]
 public function createCard(Request $request, SerializerInterface $serializer, EntityManagerInterface $em,
     UrlGeneratorInterface $urlGenerator, TypeRepository $typeRepository, ValidatorInterface $validator): JsonResponse {
     // Deserialize the request content to a Card object
@@ -155,8 +160,10 @@ public function createCard(Request $request, SerializerInterface $serializer, En
  * @throws Exception If the request content cannot be deserialized to a Card object.
  *
  * @Route("/api/cards/{id}", name="updateCard", methods={"PUT"})
+ * #[IsGranted("ROLE_ADMIN", message: "Only an admin can modify a card.")]
  */
 #[Route('/api/cards/{id}', name: 'updateCard', methods: ['PUT'])]
+#[IsGranted("ROLE_ADMIN", message: "Only an admin can delete a card.")]
 public function updateCard(Request $request, SerializerInterface $serializer,Card $currentCard, EntityManagerInterface $em, TypeRepository $typeRepository, ValidatorInterface $validator): JsonResponse {
     // Deserialize the request content to a Card object, populating the existing $currentCard object
     try {

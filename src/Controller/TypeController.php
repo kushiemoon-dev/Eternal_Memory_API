@@ -77,6 +77,7 @@ public function getDetailType(Type $type, SerializerInterface $serializer): Json
  * @throws Exception If the Type entity with the given ID does not exist.
  */
 #[Route('/api/types/{id}', name: 'deleteType', methods: ['DELETE'])]
+#[IsGranted("ROLE_ADMIN", message: "Only an admin can delete a card.")]
 public function deleteType(Type $type, EntityManagerInterface $em): JsonResponse {
     // Remove the Type entity from the EntityManager
     $em->remove($type);
@@ -106,6 +107,7 @@ public function deleteType(Type $type, EntityManagerInterface $em): JsonResponse
  * The Location header contains the URL of the newly created Type entity.
  */
 #[Route('/api/types', name: 'createType', methods: ['POST'])]
+#[IsGranted("ROLE_ADMIN", message: "Only an admin can delete a card.")]
 public function createType(Request $request, SerializerInterface $serializer,
     EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, ValidatorInterface $validator): JsonResponse {
     // Deserialize the request content to a Type entity
@@ -151,6 +153,7 @@ public function createType(Request $request, SerializerInterface $serializer,
  * @throws Exception If the Type entity with the given ID does not exist.
  */
 #[Route('/api/types/{id}', name: 'updateType', methods: ['PUT'])]
+#[IsGranted("ROLE_ADMIN", message: "Only an admin can delete a card.")]
 public function updateType(Request $request, SerializerInterface $serializer,
     Type $currentType, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse {
 
