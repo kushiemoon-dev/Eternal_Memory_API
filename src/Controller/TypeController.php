@@ -68,7 +68,13 @@ public function getAllType(TypeRepository $typeRepository, SerializerInterface $
             $em->remove($type);
             
             $em->flush();
-            dd($type->getCards());
+
+              
+        /**
+         * 
+         * dd($type->getCards());
+         */
+        
             return new JsonResponse(null, Response::HTTP_NO_CONTENT);
         }
     
